@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sync with GitHub on a schedule, at load/wake catch-up, and every 30 minutes.
+# Sync with GitHub once a day, plus login/wake catch-up if today has not run yet.
 # Pulls remote updates, commits local changes, then pushes.
 set -euo pipefail
 
@@ -10,9 +10,14 @@ LOG_FILE="${LOG_FILE:-$BACKUP_DIR/backup.log}"
 BACKUP_SCRIPT="${BACKUP_SCRIPT:-$BACKUP_DIR/backup-all.sh}"
 
 TODAY="$(date '+%Y-%m-%d')"
-trigger="${1:-interval}"
+trigger="${1:-daily}"
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] RUN  scheduler (trigger=$trigger)" >>"$LOG_FILE"
+
+if [[ "$trigger" != "force" && -f "$STAMP_FILE" && "$(cat "$STAMP_FILE")" == "$TODAY" ]]; then
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] SKIP already ran today" >>"$LOG_FILE"
+  exit 0
+fi
 
 if "$BACKUP_SCRIPT"; then
   echo "$TODAY" >"$STAMP_FILE"

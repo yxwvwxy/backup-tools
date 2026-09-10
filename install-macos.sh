@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Install the Mac backup scheduler (login/wake + every 30 minutes).
-# Uses backup-scheduler.sh already in this repo — same job as the MacBook.
+# Install the Mac backup scheduler (once a day, plus login/wake catch-up).
+# Uses backup-scheduler.sh already in this repo.
 set -euo pipefail
 
 BACKUP_DIR="${BACKUP_DIR:-$HOME/Projects/backup-tools}"
@@ -21,14 +21,19 @@ cat >"$PLIST" <<EOF
   <array>
     <string>/bin/bash</string>
     <string>${BACKUP_DIR}/backup-scheduler.sh</string>
-    <string>interval</string>
+    <string>daily</string>
   </array>
   <key>WorkingDirectory</key>
   <string>${BACKUP_DIR}</string>
   <key>RunAtLoad</key>
   <true/>
-  <key>StartInterval</key>
-  <integer>1800</integer>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>21</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
   <key>StandardOutPath</key>
   <string>${BACKUP_DIR}/scheduler.out.log</string>
   <key>StandardErrorPath</key>
@@ -57,7 +62,5 @@ launchctl bootstrap "gui/${UID_NUM}" "$PLIST"
 launchctl enable "gui/${UID_NUM}/${LABEL}"
 
 echo "Installed ${PLIST}"
-echo "Runs backup-scheduler.sh at login/wake and every 30 minutes."
-echo "Kickstarting one sync now..."
-launchctl kickstart -k "gui/${UID_NUM}/${LABEL}"
+echo "Runs backup-scheduler.sh once a day at 21:00, and on login if today has not run yet."
 echo "Done."

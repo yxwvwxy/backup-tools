@@ -8,6 +8,10 @@ LOG_FILE="${LOG_FILE:-$BACKUP_DIR/backup.log}"
 DATE="$(date '+%Y-%m-%d %H:%M:%S')"
 TODAY="$(date '+%Y-%m-%d')"
 export GIT_TERMINAL_PROMPT=0
+export GIT_AUTHOR_NAME="${GIT_AUTHOR_NAME:-Vivienne}"
+export GIT_AUTHOR_EMAIL="${GIT_AUTHOR_EMAIL:-yxwvwxy@users.noreply.github.com}"
+export GIT_COMMITTER_NAME="${GIT_COMMITTER_NAME:-$GIT_AUTHOR_NAME}"
+export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-$GIT_AUTHOR_EMAIL}"
 
 log() {
   echo "[$DATE] $*" | tee -a "$LOG_FILE"
