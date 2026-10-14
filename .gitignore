@@ -3,3 +3,6 @@
 backup.log
 *.out.log
 *.err.log
+
+github-recovery-codes.txt
+*recovery-codes*
