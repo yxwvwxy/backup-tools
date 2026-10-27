@@ -13,6 +13,34 @@ export GIT_AUTHOR_EMAIL="${GIT_AUTHOR_EMAIL:-yxwvwxy@users.noreply.github.com}"
 export GIT_COMMITTER_NAME="${GIT_COMMITTER_NAME:-$GIT_AUTHOR_NAME}"
 export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-$GIT_AUTHOR_EMAIL}"
 
+# Private / opt-in only — skip unless SYNC_PRIVATE=1 or named in SYNC_INCLUDE
+SKIP_UNLESS_ASKED=(
+  "Application Autofill"
+  "BaZi"
+)
+
+should_skip() {
+  local name="$1"
+  local item
+  if [[ "${SYNC_PRIVATE:-0}" == "1" ]]; then
+    return 1
+  fi
+  if [[ -n "${SYNC_INCLUDE:-}" ]]; then
+    local IFS=','
+    for item in $SYNC_INCLUDE; do
+      if [[ "$item" == "$name" ]]; then
+        return 1
+      fi
+    done
+  fi
+  for item in "${SKIP_UNLESS_ASKED[@]}"; do
+    if [[ "$item" == "$name" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 log() {
   echo "[$DATE] $*" | tee -a "$LOG_FILE"
 }
@@ -21,6 +49,11 @@ backup_repo() {
   local dir="$1"
   local name
   name="$(basename "$dir")"
+
+  if should_skip "$name"; then
+    log "SKIP $name: private — sync only when asked"
+    return 0
+  fi
 
   if [[ ! -d "$dir/.git" ]]; then
     return 0
