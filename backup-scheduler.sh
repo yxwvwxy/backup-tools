@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Run daily backup at 11:00 PM, or catch up on next wake/boot if that run was missed.
-# A catch-up after midnight still counts as the previous night's run, so the
-# next 11 PM run still happens. Pulls remote updates, commits local changes, then pushes.
+# Run daily backup at 2:00 PM, or catch up on next wake/boot if that run was missed.
+# A catch-up before 2 PM the next day still counts as the previous day's run,
+# so that day's 2 PM run still happens. Pulls remote updates, commits local changes, then pushes.
 set -euo pipefail
 
 PROJECTS_DIR="${PROJECTS_DIR:-$HOME/Projects}"
@@ -10,7 +10,7 @@ STAMP_FILE="${STAMP_FILE:-$BACKUP_DIR/.backup-last-run}"
 LOG_FILE="${LOG_FILE:-$BACKUP_DIR/backup.log}"
 BACKUP_SCRIPT="${BACKUP_SCRIPT:-$BACKUP_DIR/backup-all.sh}"
 
-SCHEDULE_HOUR="${SCHEDULE_HOUR:-23}"
+SCHEDULE_HOUR="${SCHEDULE_HOUR:-14}"
 SCHEDULE_MINUTE="${SCHEDULE_MINUTE:-0}"
 
 NOW_HOUR="$(date '+%H')"

@@ -7,6 +7,8 @@ BACKUP_DIR="${BACKUP_DIR:-$HOME/Projects/backup-tools}"
 LABEL="com.yxwvwxy.backup-sync"
 PLIST="$HOME/Library/LaunchAgents/${LABEL}.plist"
 UID_NUM="$(id -u)"
+SCHEDULE_HOUR="${SCHEDULE_HOUR:-14}"
+SCHEDULE_MINUTE="${SCHEDULE_MINUTE:-0}"
 
 mkdir -p "$HOME/Library/LaunchAgents"
 
@@ -30,9 +32,9 @@ cat >"$PLIST" <<EOF
   <key>StartCalendarInterval</key>
   <dict>
     <key>Hour</key>
-    <integer>23</integer>
+    <integer>${SCHEDULE_HOUR}</integer>
     <key>Minute</key>
-    <integer>0</integer>
+    <integer>${SCHEDULE_MINUTE}</integer>
   </dict>
   <key>StandardOutPath</key>
   <string>${BACKUP_DIR}/scheduler.out.log</string>
@@ -62,5 +64,5 @@ launchctl bootstrap "gui/${UID_NUM}" "$PLIST"
 launchctl enable "gui/${UID_NUM}/${LABEL}"
 
 echo "Installed ${PLIST}"
-echo "Runs backup-scheduler.sh once a day at 23:00; if that run is missed, it runs on the next wake/login."
+echo "Runs backup-scheduler.sh once a day at $(printf "%02d:%02d" "$SCHEDULE_HOUR" "$SCHEDULE_MINUTE"); if that run is missed, it runs on the next wake/login."
 echo "Done."
