@@ -30,7 +30,7 @@ cat >"$PLIST" <<EOF
   <key>StartCalendarInterval</key>
   <dict>
     <key>Hour</key>
-    <integer>21</integer>
+    <integer>23</integer>
     <key>Minute</key>
     <integer>0</integer>
   </dict>
@@ -62,5 +62,5 @@ launchctl bootstrap "gui/${UID_NUM}" "$PLIST"
 launchctl enable "gui/${UID_NUM}/${LABEL}"
 
 echo "Installed ${PLIST}"
-echo "Runs backup-scheduler.sh once a day at 21:00, and on login if today has not run yet."
+echo "Runs backup-scheduler.sh once a day at 23:00; if that run is missed, it runs on the next wake/login."
 echo "Done."
