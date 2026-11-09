@@ -28,8 +28,8 @@ create_and_push "$HOME/Projects/Pickup Database" "pickup-database"
 create_and_push "$HOME/Projects/Shaken & Sorted" "shaken-and-sorted"
 
 echo ""
-echo "=== KOTC Meta Monitor (existing remote) ==="
-cd "$HOME/Projects/KOTC Meta Monitor"
+echo "=== KOTC Marketing (existing remote) ==="
+cd "$HOME/Projects/KOTC Marketing"
 git push
 
 echo ""
